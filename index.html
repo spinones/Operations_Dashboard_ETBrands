@@ -22,7 +22,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .htitle{font-size:18px;font-weight:700;}
 .hsub{font-size:11px;color:#94a3b8;margin-top:1px;}
 .hperiod{margin-left:auto;font-size:12px;color:#cbd5e1;background:rgba(255,255,255,.08);padding:5px 14px;border-radius:20px;}
-.tabs{background:var(--primary);padding:0 28px;display:flex;gap:2px;}
+.tabs{background:var(--primary);padding:0 28px;display:flex;gap:2px;position:sticky;top:0;z-index:100;}
 .tb{padding:10px 20px;border:none;background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:.15s;}
 .tb:hover{color:#e2e8f0;} .tb.on{color:#fff;border-bottom-color:var(--accent);}
 .page{display:none;padding:20px 28px 32px;} .page.on{display:block;}
@@ -59,7 +59,99 @@ td{padding:7px 12px;border-bottom:1px solid #f1f5f9;}
 .ok{background:#d1fae5;color:#065f46;} .warn{background:#fef3c7;color:#92400e;} .bad{background:#fee2e2;color:#991b1b;} .pend{background:#f3e8ff;color:#6b21a8;}
 .empty-msg{display:flex;align-items:center;justify-content:center;height:180px;color:var(--muted);font-size:13px;font-weight:600;}
 
-@media(max-width:900px){.cards{grid-template-columns:1fr 1fr;}.cards4{grid-template-columns:1fr 1fr;}.row2{grid-template-columns:1fr;}.row3{grid-template-columns:1fr;}}
+/* ═══ TABLET (≤900px) ═══════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .cards{grid-template-columns:1fr 1fr;}
+  .cards4{grid-template-columns:1fr 1fr;}
+  .row2{grid-template-columns:1fr;}
+  .row3{grid-template-columns:1fr;}
+}
+
+/* ═══ MÓVIL (≤640px) ════════════════════════════════════════════════════ */
+@media(max-width:640px){
+  /* Header */
+  .header{padding:10px 14px;gap:10px;}
+  .hlogo{width:44px;height:44px;border-radius:6px;}
+  .hlogo img{width:44px;height:44px;}
+  .htitle{font-size:14px;}
+  .hsub{font-size:10px;}
+  .hperiod{font-size:10px;padding:4px 10px;white-space:nowrap;}
+
+  /* Tabs — scroll horizontal */
+  .tabs{padding:0 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+        scrollbar-width:none;flex-wrap:nowrap;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tb{padding:9px 12px;font-size:11.5px;white-space:nowrap;flex-shrink:0;}
+
+  /* Página */
+  .page{padding:12px 12px 24px;}
+
+  /* Filtros */
+  .filters{padding:10px 12px;gap:8px 12px;}
+  .fg{flex-wrap:wrap;}
+  .fg label{font-size:11px;}
+  .fg select{min-width:90px;padding:5px 8px;font-size:11px;}
+  .freset{padding:5px 12px;font-size:11px;}
+
+  /* KPI cards */
+  .cards{grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+  .cards4{grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+  .cards2{grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+  .card{padding:12px 13px;}
+  .clabel{font-size:9.5px;}
+  .cval{font-size:22px;}
+  .csub{font-size:10px;}
+
+  /* Layouts */
+  .row1,.row2,.row3{margin-bottom:12px;}
+  .row2{grid-template-columns:1fr;}
+  .row3{grid-template-columns:1fr;}
+
+  /* Paneles */
+  .panel{padding:14px 12px;}
+  .ptitle{font-size:12px;margin-bottom:11px;}
+
+  /* Gráficos */
+  .ch{height:200px;}
+  .ch2{height:220px;}
+
+  /* Tablas */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-height:340px;}
+  .tw2{overflow-x:auto;-webkit-overflow-scrolling:touch;max-height:420px;}
+  table{font-size:11px;min-width:520px;}
+  thead th{padding:7px 8px;font-size:10px;}
+  td{padding:6px 8px;}
+}
+
+/* ═══ MÓVIL PEQUEÑO (≤390px) ════════════════════════════════════════════ */
+@media(max-width:390px){
+  .htitle{font-size:13px;}
+  .hperiod{display:none;}
+  .tb{padding:8px 10px;font-size:11px;}
+  .page{padding:10px 10px 20px;}
+  .cval{font-size:20px;}
+  .cards,.cards4,.cards2{gap:7px;}
+  .card{padding:10px 11px;}
+}.cards4{grid-template-columns:1fr 1fr;}.row2{grid-template-columns:1fr;}.row3{grid-template-columns:1fr;}}
+
+@media(max-width:640px){
+  .tb .tlong{display:none;}
+  .tb .tshort{display:inline;}
+  .filter-toggle{display:flex;align-items:center;gap:6px;width:100%;
+    background:none;border:none;color:var(--muted);font-size:12px;
+    font-weight:700;cursor:pointer;padding:0;margin-bottom:2px;text-align:left;}
+  .filter-toggle svg{transition:transform .2s;flex-shrink:0;}
+  .filter-toggle.open svg{transform:rotate(180deg);}
+  .filter-body{display:none;width:100%;flex-wrap:wrap;gap:10px 14px;padding-top:8px;
+    border-top:1px solid var(--border);}
+  .filter-body.open{display:flex;}
+}
+@media(min-width:641px){
+  .tb .tshort{display:none;}
+  .tb .tlong{display:inline;}
+  .filter-toggle{display:none;}
+  .filter-body{display:flex;flex-wrap:wrap;gap:16px;align-items:center;width:100%;}
+}
 </style>
 
 <style id="multiselect-css">
@@ -92,21 +184,28 @@ td{padding:7px 12px;border-bottom:1px solid #f1f5f9;}
 
 
 <div class="tabs">
-  <button class="tb on" onclick="showTab('p1',this)">📦 Estadística de Entregas</button>
-  <button class="tb"    onclick="showTab('p2',this)">🎯 OTS</button>
-  <button class="tb"    onclick="showTab('p3',this)">🚚 OTD</button>
-  <button class="tb"    onclick="showTab('p4',this)">📥 DTS</button>
-  <button class="tb"    onclick="showTab('p5',this)">🏭 Storage</button>
-  <button class="tb"    onclick="showTab('p6',this)">📦 Fulfillment</button>
-  <button class="tb"    onclick="showTab('p9',this)">🔢 Conteos Cíclicos</button>
-  <button class="tb"    onclick="showTab('p8',this)">↩️ Devoluciones</button>
-  <button class="tb"    onclick="showTab('p7',this)">📊 Resumen</button>
+  <button class="tb on" onclick="showTab('p1',this)">📦 <span class="tlong">Estadística de Entregas</span><span class="tshort">Entregas</span></button>
+  <button class="tb"    onclick="showTab('p2',this)">🎯 <span class="tlong">OTS</span><span class="tshort">OTS</span></button>
+  <button class="tb"    onclick="showTab('p3',this)">🚚 <span class="tlong">OTD</span><span class="tshort">OTD</span></button>
+  <button class="tb"    onclick="showTab('p4',this)">📥 <span class="tlong">DTS</span><span class="tshort">DTS</span></button>
+  <button class="tb"    onclick="showTab('p5',this)">🏭 <span class="tlong">Storage</span><span class="tshort">Storage</span></button>
+  <button class="tb"    onclick="showTab('p6',this)">📦 <span class="tlong">Fulfillment</span><span class="tshort">Fulfillment</span></button>
+  <button class="tb"    onclick="showTab('p9',this)">🔢 <span class="tlong">Conteos Cíclicos</span><span class="tshort">Conteos</span></button>
+  <button class="tb"    onclick="showTab('p8',this)">↩️ <span class="tlong">Devoluciones</span><span class="tshort">Devoluc.</span></button>
+  <button class="tb"    onclick="showTab('p7',this)">📊 <span class="tlong">Resumen</span><span class="tshort">Resumen</span></button>
 </div>
 
 <!-- PAGE 1: Estadística de Entregas -->
 <div id="p1" class="page on">
   <div class="filters">
+  <button class="filter-toggle" onclick="this.classList.toggle('open');
+    this.nextElementSibling.classList.toggle('open')">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2,4 6,8 10,4"/></svg>
+    Filtros
+  </button>
+  <div class="filter-body">
     <div class="fg"><label>Mes</label><select id="fMes" onchange="applyF()"><option value="">Todos</option></select></div>
+</div>
     <div class="fg"><label>Semana</label><select id="fSem" onchange="applyF()"><option value="">Todas</option></select></div>
     <div class="fg"><label>Día</label><select id="fDia" onchange="applyF()"><option value="">Todos</option></select></div>
     <div class="fg"><label>Canal</label><select id="fCanal" onchange="applyF()"><option value="">Todos</option></select></div>
