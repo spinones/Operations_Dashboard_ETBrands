@@ -152,6 +152,38 @@ td{padding:7px 12px;border-bottom:1px solid #f1f5f9;}
   .filter-toggle{display:none;}
   .filter-body{display:flex;flex-wrap:wrap;gap:16px;align-items:center;width:100%;}
 }
+
+/* ══ BOTTOM NAV (móvil) ══════════════════════════════════════════════════ */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;
+  background:#0f172a;border-top:1px solid rgba(255,255,255,.10);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  z-index:200;padding-bottom:env(safe-area-inset-bottom,0px);}
+.bnav::-webkit-scrollbar{display:none;}
+.bnav-inner{display:flex;min-width:max-content;width:100%;}
+.bni{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1 0 64px;padding:7px 6px 9px;border:none;background:transparent;
+  color:rgba(148,163,184,.75);cursor:pointer;gap:3px;
+  border-top:3px solid transparent;transition:color .15s,border-color .15s;}
+.bni.on{color:#fff;border-top-color:#e84e1b;}
+.bni-ico{font-size:18px;line-height:1.1;}
+.bni-lbl{font-size:9.5px;font-weight:700;white-space:nowrap;letter-spacing:.3px;}
+
+@media(max-width:640px){
+  .tabs{display:none!important;}
+  .bnav{display:block;}
+  .page{padding-bottom:72px!important;}
+  /* Filtros */
+  .filter-toggle{display:flex!important;}
+  .filter-body{display:none!important;}
+  .filter-body.open{display:flex!important;}
+}
+@media(min-width:641px){
+  .tabs{display:flex!important;}
+  .bnav{display:none!important;}
+  .filter-toggle{display:none!important;}
+  .filter-body{display:flex!important;flex-wrap:wrap;gap:16px;align-items:center;width:100%;}
+}
+
 </style>
 
 <style id="multiselect-css">
@@ -2173,5 +2205,52 @@ window._ccAllRows = null;
 })();
 
 </script>
+
+<!-- Bottom nav móvil -->
+<nav class="bnav" id="bnav"><div class="bnav-inner" id="bnav-inner"></div></nav>
+
+<script>
+(function(){
+  var TABS = [
+    ['📦','Entregas'],
+    ['🎯','OTS'],
+    ['🚚','OTD'],
+    ['📥','DTS'],
+    ['🏭','Storage'],
+    ['📦','Fulfillment'],
+    ['🔢','Conteos'],
+    ['↩️','Devoluc.'],
+    ['📊','Resumen']
+  ];
+  var inner = document.getElementById('bnav-inner');
+  var tbs   = document.querySelectorAll('.tb');
+  if(!inner || !tbs.length) return;
+
+  tbs.forEach(function(tb, i){
+    var info = TABS[i] || ['•', tb.textContent.trim().split(' ').pop().slice(0,8)];
+    var btn  = document.createElement('button');
+    btn.className = 'bni' + (tb.classList.contains('on') ? ' on' : '');
+    btn.innerHTML = '<span class="bni-ico">' + info[0] + '</span>'
+                  + '<span class="bni-lbl">' + info[1] + '</span>';
+
+    btn.addEventListener('click', function(){
+      tb.click();
+      // Sync estado activo
+      document.querySelectorAll('.bni').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      // Scroll al botón activo en la barra
+      btn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    });
+    inner.appendChild(btn);
+
+    // Sincronizar clicks del tab desktop → bottom nav
+    tb.addEventListener('click', function(){
+      document.querySelectorAll('.bni').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
