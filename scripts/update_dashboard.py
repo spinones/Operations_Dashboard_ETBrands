@@ -284,7 +284,11 @@ for row in ws_det_sh.iter_rows(min_row=2, values_only=True):
 # ── 5. DEVOLUCIONES ───────────────────────────────────────────────────────────
 print("  → Devoluciones")
 wb=openpyxl.load_workbook(download_xlsx(IDS["devoluciones"]), read_only=True, data_only=True)
-ws=wb["Dev.2026"]
+# Buscar la hoja correcta (puede llamarse Dev.2026, Devoluciones, Sheet1, etc.)
+_dev_candidates = [s for s in wb.sheetnames if "dev" in s.lower() or "devol" in s.lower()]
+_dev_sheet = _dev_candidates[0] if _dev_candidates else wb.sheetnames[0]
+print(f"    Hojas disponibles: {wb.sheetnames} → usando '{_dev_sheet}'")
+ws=wb[_dev_sheet]
 dev_rows=[]
 for row in ws.iter_rows(min_row=2, values_only=True):
     if not row or not row[1]: continue
