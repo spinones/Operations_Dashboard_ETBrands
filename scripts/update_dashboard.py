@@ -115,14 +115,17 @@ print("Descargando 8 fuentes desde Google Drive...")
 # ── 1. MANIFIESTO ─────────────────────────────────────────────────────────────
 print("  → Manifiesto")
 wb = openpyxl.load_workbook(download_xlsx(IDS["manifiesto"]), read_only=True, data_only=True)
-ws = wb["Base de datos"]
 manif = defaultdict(lambda: defaultdict(int))
-for row in ws.iter_rows(min_row=2, values_only=True):
-    tk, fe_raw, tr = (row[3] if len(row)>3 else None), (row[2] if len(row)>2 else None), (row[4] if len(row)>4 else None)
-    if not tk or not fe_raw: continue
-    fecha = fe_raw if isinstance(fe_raw, datetime) else pa(str(fe_raw))
-    if not fecha or tr not in ("Despachalo","Recibelo") or fecha < CUTOFF: continue
-    manif[fecha.strftime("%Y-%m-%d")][tr] += 1
+_mani_sheets = [s for s in wb.sheetnames if s in ("Base de datos", "HISTORICO")]
+print(f"    Hojas Manifiesto: {_mani_sheets}")
+for _sheet_name in _mani_sheets:
+    ws = wb[_sheet_name]
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        tk, fe_raw, tr = (row[3] if len(row)>3 else None), (row[2] if len(row)>2 else None), (row[4] if len(row)>4 else None)
+        if not tk or not fe_raw: continue
+        fecha = fe_raw if isinstance(fe_raw, datetime) else pa(str(fe_raw))
+        if not fecha or tr not in ("Despachalo","Recibelo") or fecha < CUTOFF: continue
+        manif[fecha.strftime("%Y-%m-%d")][tr] += 1
 
 for fi, trs in manif.items():
     d = datetime.strptime(fi, "%Y-%m-%d"); mn,ms,sn,ss = minfo(d)
