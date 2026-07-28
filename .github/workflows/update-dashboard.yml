@@ -1,0 +1,36 @@
+name: Actualizar Dashboard ET Brands
+
+on:
+  schedule:
+    # Lunes a viernes a las 8:00 AM hora Chile (UTC-3 → 11:00 UTC)
+    - cron: "0 11 * * 1-5"
+  workflow_dispatch:   # También se puede correr manualmente desde GitHub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install openpyxl google-api-python-client google-auth
+
+      - name: Actualizar dashboard
+        env:
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        run: python scripts/update_dashboard.py
+
+      - name: Commit y push si hubo cambios
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Dashboard actualizado $(date +'%d/%m/%Y %H:%M')"
+          git push
