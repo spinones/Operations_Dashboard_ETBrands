@@ -292,18 +292,29 @@ _dev_candidates = [s for s in wb.sheetnames if "dev" in s.lower() or "devol" in 
 _dev_sheet = _dev_candidates[0] if _dev_candidates else wb.sheetnames[0]
 print(f"    Hojas disponibles: {wb.sheetnames} → usando '{_dev_sheet}'")
 ws=wb[_dev_sheet]
+# Mapear columnas por nombre de encabezado (robusto a cambios de orden/estructura)
+_dev_hdr=[str(c).strip() if c else "" for c in next(ws.iter_rows(min_row=1,max_row=1,values_only=True))]
+_dev_idx={h:i for i,h in enumerate(_dev_hdr)}
+print(f"    Encabezados Devoluciones: {_dev_hdr}")
+i_fecha=_dev_idx.get("Fecha",1)
+i_mes=_dev_idx.get("MES",2)
+i_sku=_dev_idx.get("SKU",3)
+i_canal=_dev_idx.get("MarketPlace",4)
+i_espec=_dev_idx.get("Especificacion",5)
+i_clasi=_dev_idx.get("Clasificacion",_dev_idx.get("Clasificación",8))
+i_sem=_dev_idx.get("Semana",11)
 dev_rows=[]
 for row in ws.iter_rows(min_row=2, values_only=True):
-    if not row or not row[1]: continue
-    fecha=row[1] if isinstance(row[1],datetime) else pa(str(row[1]))
+    if not row or not row[i_fecha]: continue
+    fecha=row[i_fecha] if isinstance(row[i_fecha],datetime) else pa(str(row[i_fecha]))
     if not fecha: continue
     fi=fecha.strftime("%Y-%m-%d")
-    mes=str(row[2]).strip() if row[2] else f"{MESES[fecha.month]} {fecha.year}"
-    canal=str(row[4]).strip() if row[4] else ""
-    espec=str(row[5]).strip() if row[5] else ""
-    clasi=str(row[8]).strip() if row[8] else "DESCONOCIDA"
-    sku=str(row[3]).strip() if row[3] else ""
-    raw_sem=str(row[11]).strip() if len(row)>11 and row[11] else ""
+    mes=str(row[i_mes]).strip() if row[i_mes] else f"{MESES[fecha.month]} {fecha.year}"
+    canal=str(row[i_canal]).strip() if row[i_canal] else ""
+    espec=str(row[i_espec]).strip() if row[i_espec] else ""
+    clasi=str(row[i_clasi]).strip() if row[i_clasi] else "DESCONOCIDA"
+    sku=str(row[i_sku]).strip() if row[i_sku] else ""
+    raw_sem=str(row[i_sem]).strip() if len(row)>i_sem and row[i_sem] else ""
     if raw_sem:
         core=raw_sem.lstrip("Ww")
         sem=f"W{int(float(core))}" if core.replace(".","").isdigit() else f"W{fecha.isocalendar()[1]}"
