@@ -329,6 +329,7 @@ ws=wb_st["Ocupacion"]
 ocup_fechas=[]; ocup_pcts=[]; ocup_occ=[]; ocup_disp=[]
 for row in ws.iter_rows(min_row=2, values_only=True):
     if not row or not row[0]: continue
+    if row[1] is None and row[2] is None: continue  # fila placeholder sin datos aún
     fecha=row[0] if isinstance(row[0],datetime) else pa(str(row[0]))
     if not fecha: continue
     disp=int(row[1] or 0); ocup=int(row[2] or 0); total=disp+ocup
